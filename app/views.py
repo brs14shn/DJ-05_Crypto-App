@@ -1,13 +1,24 @@
 from django.shortcuts import render
 import requests # İstek gönderiyoruz =>axios 
+from pprint import pprint
+from .models import Coin
 
 # Create your views here.
 
 def home(request):
+     coin=request.GET.get("coin_name")
+     pprint(coin)
      url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=100&page=1&sparkline=false"
      response = requests.get(url)
-     content = response.json()
-     print(content)
+     content = response.json()  # dict formatına çevirdik
+     #pprint(content[0]["name"])
 
-     return render(request,"app/home.html")
+
+
+     for i in content:
+        if i["name"] ==coin:
+            name_c=i["name"]
+
+
+     #return render(request,"app/home.html")
      
