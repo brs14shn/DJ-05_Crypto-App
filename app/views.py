@@ -26,8 +26,29 @@ def home(request):
         else:
             continue
             #girilen veri api de yok
+#*  ==================================
+     coin_data=[]
+     coins=Coin.objects.all()
+
+     for k in coins:
+        #print(k)
+        for n in content:
+            if n["name"]==str(k):
+                data={
+
+                    "name":n["name"],
+                    "image":n["image"],
+                    "market":n["current_price"],    
+                    "change":n["price_change_24h"]
+                }
+                #pprint(data)
+                coin_data.append(data)
+     context={
+        "coin_data":coin_data
+    }
+      
                 
 
 
-     return render(request,"app/home.html")
+     return render(request,"app/home.html",context)
      
