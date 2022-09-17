@@ -18,7 +18,16 @@ def home(request):
      for i in content:
         if i["name"] ==coin:
             name_c=i["name"]
+            if Coin.objects.filter(name=name_c):
+                continue
+
+            else:
+                Coin.objects.create(name=name_c)
+        else:
+            continue
+            #girilen veri api de yok
+                
 
 
-     #return render(request,"app/home.html")
+     return render(request,"app/home.html")
      
