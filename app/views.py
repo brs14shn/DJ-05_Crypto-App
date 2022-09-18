@@ -44,11 +44,10 @@ def home(request):
             if i["name"].lower() ==coin.lower():
                 name_c=i["name"]
                 if Coin.objects.filter(name=name_c):
-                    continue
-                    #messages.warning(request, "Coin already exists!")
+                    messages.warning(request, "Coin already exists!")
                 else:
                     Coin.objects.create(name=name_c)
-                    messages.success(request, 'City added!')
+                    messages.success(request, 'Coin added!')
                      
 
             else:
