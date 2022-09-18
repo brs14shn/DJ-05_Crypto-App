@@ -1,7 +1,9 @@
-from django.shortcuts import render
-import requests # İstek gönderiyoruz =>axios 
+from django.shortcuts import render, redirect,get_object_or_404
+import requests
 from pprint import pprint
 from .models import Coin
+
+from django.contrib import messages
 
 # Create your views here.
 
@@ -14,28 +16,58 @@ def home(request):
      #pprint(content[0]["name"])
 
 
+     if coin:
+        url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=100&page=1&sparkline=false"
+        response = requests.get(url)
+        if response.ok:
+             content = response.json()
+             for i in content:
+                if i["name"].lower() ==coin.lower():
+                    name_c=i["name"]
+                    if Coin.objects.filter(name=name_c):
+                        messages.warning(request, "Coin already exists!")
+                        
+                        
+                    else:
+                        Coin.objects.create(name=name_c)
+                        messages.success(request, 'City added!')
+                        
+                
+                else:     
+                    messages.warning(request, "There is no coin")  
+                    coin=""
+                   
+                    
 
-     for i in content:
-        if i["name"] ==coin:
-            name_c=i["name"]
-            if Coin.objects.filter(name=name_c):
-                continue
 
-            else:
-                Coin.objects.create(name=name_c)
-        else:
-            continue
+
+
+
+
+    #  for i in content:
+    #     if i["name"].lower() ==coin.lower():
+    #         name_c=i["name"]
+    #         if Coin.objects.filter(name=name_c):
+    #             continue
+
+    #         else:
+    #             Coin.objects.create(name=name_c)
+    #             messages.success(request, 'City added!')
+    #             continue
+
+    #     else:
+    #         continue
             #girilen veri api de yok
 #*  ==================================
      coin_data=[]
-     coins=Coin.objects.all()
+     coins=Coin.objects.all().order_by("-id")
 
      for k in coins:
         #print(k)
         for n in content:
             if n["name"]==str(k):
                 data={
-
+                    "k":k,
                     "name":n["name"],
                     "image":n["image"],
                     "market":n["current_price"],    
@@ -51,4 +83,11 @@ def home(request):
 
 
      return render(request,"app/home.html",context)
+
+
+def delete_coin(request, id):
+    coin = get_object_or_404(Coin, id=id)
+    coin.delete()
+    messages.warning(request, 'City deleted!')
+    return redirect('home')
      

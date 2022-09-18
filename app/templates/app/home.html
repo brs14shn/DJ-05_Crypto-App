@@ -30,8 +30,7 @@
         <h4>{{i.market | floatformat:"-3g" }} $</h4>
         <h4>{{i.change | floatformat:2}}</h4>
         
-        {% comment %} <a href="{% url 'delete' i.k.id %} "> {% endcomment %}
-        <a href="">
+      <a href="{% url 'delete' i.k.id %} "> 
             <button type="button" class="btn btn-danger">
             
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
